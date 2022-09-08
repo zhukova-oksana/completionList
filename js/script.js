@@ -5,39 +5,42 @@ const getText = () => {
   return text;
 }
 
-const getCheck = (item) => {
-  if ((item === 'exit') || (item === null)) {
-    return;
-  }
+const deleteElem = (list) => {
+  list.lastChild.remove();
 }
 
-const choiceAction = (value, list) => {
-  switch (true) {
-    case (value === 'del'):
-      list.lastChild.remove();
+const clearList = (list) => {
+  list.innerHTML = "";
+}
+
+const addElem = (list, value) => {
+  let li = document.createElement('li');
+  li.textContent = value;
+  list.append(li);
+}
+
+const completionList = (list) => {
+  let yes = false;
+  while (true) {
+    const liText = getText();
+    if (liText === null || liText === 'exit') { return; }
+    switch (true) {
+    case (liText === 'del'):
+      deleteElem(list);
       break;
-    case (value === 'clear'):
-      list.innerHTML = "";
+    case (liText === 'clear'):
+      clearList(list);
       break;
-    case (value === '') || (!value.trim()):
+    case (liText === '') || (!liText.trim()):
       break;
     default:
-      let li = document.createElement('li');
-      li.textContent = value;
-      list.append(li);
+      addElem(list, liText);
       break;
+    }
   }
 }
 
 const ul = document.createElement('ul');
 document.body.append(ul);
 
-const completionList = () => {
-  while (true) {
-    const liText = getText();
-    getCheck(liText);
-    choiceAction(liText, ul);
-  }
-}
-
-completionList();
+completionList(ul);
